@@ -1,0 +1,9 @@
+MSRN/test
+SAM/Images
+SRCNN_pytorch2/LargeTrial/eval
+SRCNN_pytorch2/LargeTrial/test
+SRCNN_pytorch2/LargeTrial/train
+SRCNN_pytorch2/LargeTrial/Checkpoints and results/x2/test
+SRCNN_pytorch2/LargeTrial/Checkpoints and results/x4/test
+SRCNN_pytorch2/LargeTrial/Checkpoints and results/x6/test
+SRCNN_pytorch2/LargeTrial/Checkpoints and results/x8/test

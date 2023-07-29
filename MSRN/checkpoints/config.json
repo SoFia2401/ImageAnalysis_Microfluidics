@@ -1,0 +1,20 @@
+{
+  "_name_or_path": "",
+  "bam": true,
+  "data_parallel": false,
+  "model_type": "MSRN",
+  "n_blocks": 8,
+  "n_feats": 64,
+  "rgb_mean": [
+    0.4488,
+    0.4371,
+    0.404
+  ],
+  "rgb_range": 255,
+  "rgb_std": [
+    1.0,
+    1.0,
+    1.0
+  ],
+  "scale": 8
+}
