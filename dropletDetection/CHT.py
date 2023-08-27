@@ -242,7 +242,7 @@ def process_image(image_folder, tolerance, depthUm, depthPx, bicubic_name, srcnn
     
     images = [gt_image, bicubic_image, srcnn_image]
     titles = ['Original', 'Bicubic', args.model]
-    line_width = 3  # Adjust the line width as desired
+    line_width = 1  # Adjust the line width as desired
     
     for i, image in enumerate(images):
         image_with_circles = np.copy(color.gray2rgb(image))
@@ -266,7 +266,7 @@ def process_image(image_folder, tolerance, depthUm, depthPx, bicubic_name, srcnn
                 image_with_circles[circy, circx+w] = (34,139,34)
                 image_with_circles[circy+w, circx] = (34,139,34)
     
-            draw_cross(image_with_circles, center_y, center_x, length=12, color=(34,139,34), width=6)
+            draw_cross(image_with_circles, center_y, center_x, length=12, color=(34,139,34), width=3)
         
         plt.imshow(image_with_circles)
         plt.axis('off')

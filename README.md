@@ -61,3 +61,33 @@ python /SRCNN/test.py\
 --weights-file "SRCNN/LargeTrial/Checkpoints and results/x2/best.pth"\
 --scale 2
 ```
+
+
+## MSRN-BAM
+
+To run MSRN-BAM first prepare your datasets. Run the following in terminal
+
+### Prepare datasets:
+```
+python MSRN/prepare.py\
+    --images-dir "data/train"\
+    --output-path "data/train/train_file_MSRN.h5"\
+    --scale 2
+
+
+python /home/sofiahernandezgelado/Documents/MSRN/prepare.py\
+--images-dir "data/eval"\
+--output-path "data/eval/eval_file_MSRN.h5"\
+--scale 2 --eval
+
+```
+
+### Train MSRN-BAM
+
+To train MSRN-BAM run the file MSRN/train.py and adjust parameters as required.
+
+### Test MSRN-BAM
+
+To test MSRN-BAM run the file MSRN/test.py and adjust the path of the checkpoint you want to use as required. 
+
+
