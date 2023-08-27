@@ -9,11 +9,11 @@ Created on Thu Jul  6 12:44:29 2023
 os.chdir("/home/sofiahernandezgelado/Documents/SuperResolution_Microfluidics")
 
 
-!python dropletDetection/houghCircle_multiprocessing.py --image-folder 'data/test' --scale 2\
+!python dropletDetection/CHT.py --image-folder 'data/test' --scale 2\
     --model 'srcnn'\
     --depthUm '300'\
     --depthPx '299'
-!python dropletDetection/SAM_circleDetection_csv.py --image-folder 'data/test' --scale 2\
+!python dropletDetection/SAM_CHT.py --image-folder 'data/test' --scale 2\
     --model 'srcnn'\
     --depthUm '300'\
     --depthPx '299'
