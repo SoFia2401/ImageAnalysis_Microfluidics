@@ -28,12 +28,12 @@ To run the SRCNN model run the file /SRCNN/run.py or open a terminal and run the
 ### Prepare datasets:
 
 ```
-python /home/sofiahernandezgelado/Documents/SuperResolution_Microfluidics/SRCNN/prepare.py\
+python /SRCNN/prepare.py\
     --images-dir "data/train"\
     --output-path "data/train/train_file_SRCNN.h5"\
     --scale 2
 
-python /home/sofiahernandezgelado/Documents/SuperResolution_Microfluidics/SRCNN/prepare.py\
+python /SRCNN/prepare.py\
 --images-dir "data/eval"\
 --output-path "data/eval/eval_file_SRCNN.h5"\
 --scale 2 --eval
@@ -42,7 +42,7 @@ python /home/sofiahernandezgelado/Documents/SuperResolution_Microfluidics/SRCNN/
 
 ### Training
 ```
-!python  /home/sofiahernandezgelado/Documents/SuperResolution_Microfluidics/SRCNN/train.py\
+!python  /SRCNN/train.py\
     --train-file "data/train/train_file_SRCNN.h5" \
                 --eval-file "data/eval/eval_file_SRCNN.h5" \
                 --outputs-dir "SRCNN/outputs" \
@@ -56,7 +56,7 @@ python /home/sofiahernandezgelado/Documents/SuperResolution_Microfluidics/SRCNN/
 
 ### Testing 
 ```                
-python /home/sofiahernandezgelado/Documents/SuperResolution_Microfluidics/SRCNN/test.py\
+python /SRCNN/test.py\
 --image-dir "data/test"\
 --weights-file "SRCNN/LargeTrial/Checkpoints and results/x2/best.pth"\
 --scale 2
