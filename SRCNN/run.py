@@ -6,34 +6,36 @@ Created on Sat Jun 10 20:17:13 2023
 @author: sofiahernandezgelado
 """
 
-eval_dir = "/home/daniel/Documents/SRCNN_pytorch2/eval"
-train_dir = "/home/daniel/Documents/SRCNN_pytorch2/train"
-ouput_dir = "/home/daniel/Documents/SRCNN_pytorch2/Exp2/outputs"
+# Change directory to repository
+import os
+os.chdir("/home/SuperResolution_Microfluidics")
 
+# Prepare h5py file for train
+!python /home/sofiahernandezgelado/Documents/SuperResolution_Microfluidics/SRCNN/prepare.py\
+    --images-dir "data/train"\
+    --output-path "data/train/train_file_SRCNN.h5"\
+    --scale 2
 
-train_file = train_dir + "/train_file.h5"
-eval_file = eval_dir + "/eval_file.h5"
+# Prepare h5py file for eval
+!python /home/sofiahernandezgelado/Documents/SuperResolution_Microfluidics/SRCNN/prepare.py\
+--images-dir "data/eval"\
+--output-path "data/eval/eval_file_SRCNN.h5"\
+--scale 2 --eval
 
-!python /home/sofiahernandezgelado/Documents/SRCNN_pytorch2/prepare.py\
-    --images-dir "/home/sofiahernandezgelado/Documents/SRCNN_pytorch2/LargeTrial/train"\
-    --output-path "/home/sofiahernandezgelado/Documents/SRCNN_pytorch2/LargeTrial/train_file.h5"\
-    --scale 8
-
-
-!python /home/sofiahernandezgelado/Documents/SRCNN_pytorch2/prepare.py\
---images-dir "/home/sofiahernandezgelado/Documents/SRCNN_pytorch2/LargeTrial/eval"\
---output-path "/home/sofiahernandezgelado/Documents/SRCNN_pytorch2/LargeTrial/eval_file.h5"\
---scale 8 --eval
-
-
-!python /home/daniel/Documents/SRCNN_pytorch2/train.py\
-    --train-file "/home/daniel/Documents/SRCNN_pytorch2/train/train_file.h5" \
-                --eval-file "/home/daniel/Documents/SRCNN_pytorch2/eval/eval_file.h5" \
-                --outputs-dir "/home/daniel/Documents/SRCNN_pytorch2/Experiments/Exp6/outputs" \
-                --scale 8 \
+# Start training
+!python  /home/sofiahernandezgelado/Documents/SuperResolution_Microfluidics/SRCNN/train.py\
+    --train-file "data/train/train_file_SRCNN.h5" \
+                --eval-file "data/eval/eval_file_SRCNN.h5" \
+                --outputs-dir "SRCNN/outputs" \
+                --scale 2 \
                 --lr 1e-5 \
                 --batch-size 32\
                 --num-epochs 100\
                 --num-workers 2 \
                 --seed 123
                            
+# Test performance                
+!python /home/sofiahernandezgelado/Documents/SuperResolution_Microfluidics/SRCNN/test.py\
+--image-dir "data/test"\
+--weights-file "SRCNN/LargeTrial/Checkpoints and results/x2/best.pth"\
+--scale 2

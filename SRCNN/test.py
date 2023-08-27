@@ -13,8 +13,7 @@ import numpy as np
 import PIL.Image as pil_image
 import os
 from models import SRCNN
-from utils import convert_rgb_to_ycbcr, convert_ycbcr_to_rgb
-from skimage.metrics import structural_similarity as ssim
+from utils import convert_rgb_to_ycbcr, convert_ycbcr_to_rgb, ssim
 
 
 def calc_psnr(img1, img2):
@@ -23,10 +22,7 @@ def calc_psnr(img1, img2):
     return psnr
 
 def calc_ssim(image1, image2):
-    # Convert tensors to numpy arrays and adjust dimensions if necessary
-
-    # Calculate SSIM
-    ssim_score = ssim(image1, image2, data_range= image2.max()-image2.min(), channel_axis=1)
+    ssim_score = ssim(image1, image2)
     return ssim_score
 
 if __name__ == '__main__':
@@ -91,7 +87,7 @@ if __name__ == '__main__':
             image = np.array(image_hr).astype(np.float32)
            
     
-            imagelr = np.array(image_lr).astype(np.uint8)
+            imagelr = np.array(image_lr).astype(np.float32)
             imagelr_norm = imagelr/ 255  # Normalize the pixel values to the range of [0, 1]
     
             y = torch.from_numpy(imagelr_norm).to(device)

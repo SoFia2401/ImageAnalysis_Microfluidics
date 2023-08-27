@@ -12,7 +12,7 @@ from tqdm import tqdm
 
 from models import SRCNN
 from datasets import TrainDataset, EvalDataset
-from utils import AverageMeter, calc_psnr
+from utils import AverageMeter, calc_psnr, calc_ssim
 import torchmetrics
 import matplotlib.pyplot as plt
 
@@ -141,7 +141,7 @@ if __name__ == '__main__':
                     with torch.no_grad():
                         train_loss.update(loss.item(), len(inputs))
                         train_psnr.update_psnr(calc_psnr(preds, labels), len(inputs))
-                        train_ssim.update_ssim(torchmetrics.functional.structural_similarity_index_measure(preds, labels).cpu().detach().numpy(), len(inputs))
+                        train_ssim.update_ssim(calc_ssim(preds, labels), len(inputs))
 
                         t.set_postfix(loss='{:.8f}'.format(train_loss.avg))
                         t.update(len(inputs))
@@ -166,13 +166,12 @@ if __name__ == '__main__':
             train_psnr.update_epoch(train_psnr.avg)
             train_ssim.update_epoch(train_ssim.avg)
 
-            mlflow.pytorch.log_model(model, "model", signature=signature)
+           # mlflow.pytorch.log_model(model, "model", signature=signature)
 
             
             mlflow.log_metric("train loss", train_loss.per_epoch[epoch])
             mlflow.log_metric("train psnr", train_psnr.per_epoch[epoch])
             mlflow.log_metric("train ssim", train_ssim.per_epoch[epoch])
-
             torch.save(model.state_dict(), os.path.join(args.outputs_dir, 'epoch_{}.pth'.format(epoch)))
 
             model.eval()
@@ -191,7 +190,7 @@ if __name__ == '__main__':
 
                     val_psnr.update_psnr(calc_psnr(preds, labels), len(inputs))
                     #(calc_psnr(inputs, labels))
-                    val_ssim.update_ssim(torchmetrics.functional.structural_similarity_index_measure(preds, labels).cpu().detach().numpy(), len(inputs))
+                    val_ssim.update_ssim(calc_ssim(preds, labels), len(inputs))
                     
             print(calc_psnr(inputs, labels))
             print('Val loss: {:.8f}'.format(val_loss.avg))
