@@ -167,7 +167,7 @@ def main(json_path='options/train_dncnn.json'):
         val_ssim = AverageMeter()
         val_loss = AverageMeter()
     
-        for epoch in range(1259):  # keep running
+        for epoch in range(1200):  # keep running
         
             train_loss.reset()
             train_psnr.reset()
@@ -183,20 +183,14 @@ def main(json_path='options/train_dncnn.json'):
                 if dataset_type == 'dnpatch' and current_step % 20000 == 0:  # for 'train400'
                     train_loader.dataset.update_data()
     
-                # -------------------------------
-                # 1) update learning rate
-                # -------------------------------
+
+                model.feed_data(train_data)
+                
                 model.update_learning_rate(current_step)
     
-                # -------------------------------
-                # 2) feed patch pairs
-                # -------------------------------
-                model.feed_data(train_data)
-    
-                # -------------------------------
-                # 3) optimize parameters
-                # -------------------------------
+
                 model.optimize_parameters(current_step)
+                
                 
                 
                 visuals = model.current_visuals()

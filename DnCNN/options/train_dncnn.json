@@ -1,5 +1,5 @@
 {
-  "task": "dncnn3"  //  root/task/images-models-options
+  "task": "dncnn3_trial"  //  root/task/images-models-options
   , "model": "plain" // "plain"
   , "gpu_ids": [0]
 
@@ -18,12 +18,12 @@
     "train": {
       "name": "train_dataset"           // just name
       , "dataset_type": "dncnn"         // "dncnn" | "dnpatch" for dncnn,  | "fdncnn" | "ffdnet" | "sr" | "srmd" | "dpsr" | "plain" | "plainpatch"
-      , "dataroot_H": "trainsets/train_x4_sigma6"// path of H training dataset
+      , "dataroot_H": "trainsets/train_sigma6"// path of H training dataset
       , "dataroot_L": null              // path of L training dataset
       , "H_size": 40                    // patch size 40 | 64 | 96 | 128 | 192
 
-      , "sigma": 3                 // 15, 25, 50 for DnCNN | [0, 75] for FFDNet and FDnCNN
-      , "sigma_test": 3              // 15, 25, 50 for DnCNN and ffdnet
+      , "sigma": 6                 // 15, 25, 50 for DnCNN | [0, 75] for FFDNet and FDnCNN
+      , "sigma_test": 6              // 15, 25, 50 for DnCNN and ffdnet
 
       , "dataloader_shuffle": true
       , "dataloader_num_workers": 8
@@ -32,11 +32,11 @@
     , "test": {
       "name": "test_dataset"            // just name
       , "dataset_type": "dncnn"         // "dncnn" | "dnpatch" for dncnn,  | "fdncnn" | "ffdnet" | "sr" | "srmd" | "dpsr" | "plain" | "plainpatch"
-      , "dataroot_H": "testsets/eval_x4_sigma6"  // path of H testing dataset
+      , "dataroot_H": "testsets/eval_sigma6"  // path of H testing dataset
       , "dataroot_L": null              // path of L testing dataset
 
-      , "sigma": 3                  // 15, 25, 50 for DnCNN | [0, 75] for FFDNet and FDnCNN
-      , "sigma_test": 3   // 15, 25, 50 for DnCNN and ffdnet
+      , "sigma": 6                  // 15, 25, 50 for DnCNN | [0, 75] for FFDNet and FDnCNN
+      , "sigma_test": 6   // 15, 25, 50 for DnCNN and ffdnet
 
     }
   }

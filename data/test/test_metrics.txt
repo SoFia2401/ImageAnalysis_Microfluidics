@@ -1,4 +1,0 @@
-Average PSNR (bicubic): 36.15395246130551, Standard Deviation PSNR (bicubic): 0.0
-Average PSNR (MSRN): 36.393095642535265, Standard Deviation PSNR (MSRN): 0.0
-Average SSIM (bicubic): 0.7943624647518667, Standard Deviation SSIM (bicubic): 0.0
-Average SSIM (MSRN): 0.8054029979983872, Standard Deviation SSIM (MSRN): 0.0
