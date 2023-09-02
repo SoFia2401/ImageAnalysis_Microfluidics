@@ -7,6 +7,6 @@ SRCNN_pytorch2/LargeTrial/Checkpoints and results/x2/test
 SRCNN_pytorch2/LargeTrial/Checkpoints and results/x4/test
 SRCNN_pytorch2/LargeTrial/Checkpoints and results/x6/test
 SRCNN_pytorch2/LargeTrial/Checkpoints and results/x8/test
-DnCNN/trainsets/train_sigma6
-DnCNN/testsets/eval_sigma6
-DnCNN/testsets/test_sigma6
+DnCNN/trainsets2/train_sigma6
+DnCNN/testsets2/eval_sigma6
+DnCNN/testsets2/test_sigma6

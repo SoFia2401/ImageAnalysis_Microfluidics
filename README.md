@@ -91,3 +91,27 @@ To train MSRN-BAM run the file MSRN/train.py and adjust parameters as required.
 To test MSRN-BAM run the file MSRN/test.py and adjust the path of the checkpoint you want to use as required. 
 
 
+## Denoising - DnCNN
+
+To run DnCNN prepare your place your datasets in the testsets and trainsets folder. Then modify the options/dncnn/train_dncnn.json accordingly with the parameters for your traning. 
+
+### Train
+Run the file run.py or run the command:
+
+```
+python main_train_dncnn.py
+
+```
+
+### Test
+Run the file run.py or run the command, change the model_name, testset_name and noise_level according to your dataset and model:
+
+
+```
+python main_test_dncnn.py\
+--model_name 'denoising_sigma_3'\
+--testset_name 'test_sigma6'\
+--noise_level_img 3\
+--show_img False
+
+```
