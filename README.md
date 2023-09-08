@@ -1,5 +1,13 @@
 ## Deep Learning for Microfluidic Imaging
 
+
+## Getting started
+
+Fork the repository and download the SAM model checkpoint from [here](https://dl.fbaipublicfiles.com/segment_anything/sam_vit_h_4b8939.pth). Place the model checkpoint in the dropletDetection folder.  
+
+
+
+
 ## Demo
 
 A full demo of the use of the MSRN-BAM, SAM+CHT and DnCNN models is provided [here](Demo.ipynb) 
@@ -95,7 +103,6 @@ Run the file run.py or run the command:
 
 ```
 python main_train_dncnn.py
-
 ```
 
 ### Test
@@ -108,7 +115,6 @@ python main_test_dncnn.py\
 --testset_name 'test_sigma6'\
 --noise_level_img 3\
 --show_img False
-
 ```
 
 
