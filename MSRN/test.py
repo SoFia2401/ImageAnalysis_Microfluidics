@@ -8,7 +8,9 @@ Created on Sun Aug 27 17:13:41 2023
 
 ## Run inference for MSRN
 import os
-os.chdir("/home/SuperResolution_Microfluidics/MSRN")
+#get current working directory
+working_dir = os.getcwd()
+os.chdir(working_dir + "/MSRN")
 checkpoint_path = 'MSRN/results'
 scale = 4
 from super_image import MsrnModel
@@ -29,7 +31,7 @@ import numpy as np
 import torch
 from torch import Tensor
 
-os.chdir("/home/SuperResolution_Microfluidics")
+os.chdir(working_dir)
 
 class ImageLoader:
     @staticmethod
@@ -98,6 +100,7 @@ all_psnr_bicubic =[]
 all_ssim_bicubic = []
 all_psnr_msrn =[]
 all_ssim_msrn = []
+
 # Upscale images and calculate PSNR and SSIM
 for filename in os.listdir(input_dir):
     if filename.endswith(".tif"):
@@ -126,7 +129,11 @@ for filename in os.listdir(input_dir):
         all_ssim_bicubic.append(ssim_bicubic)
         all_ssim_msrn.append(ssim_msrn)
 
-output_path = os.path.join(input_dir, "/MSRN/test/test_metrics.txt")
+
+#if does not exist create file
+
+
+output_path = "MSRN/test/test_metrics.txt"
 # Open the file for writing
 with open(output_path, 'w') as f:
     f.write(f'Average PSNR (bicubic): {np.mean(all_psnr_bicubic)}, Standard Deviation PSNR (bicubic): {np.std(all_psnr_bicubic)}\n')

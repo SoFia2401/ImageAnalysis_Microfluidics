@@ -1,46 +1,48 @@
 import os
-os.chdir("/home/SuperResolution_Microfluidics/MSRN")
 
-#from datasets import load_dataset
+# get current working directory
+working_dir = os.getcwd()
+os.chdir(working_dir + "/MSRN")
+
+#import the necessary packages from super_image
 from super_image.data import EvalDatasetH5, TrainAugmentDatasetH5, augment_five_crop
-import h5py
 import numpy as np
 from torch.utils.data import Dataset
 import torch
-import gc
-import h5py
-import random
 import numpy as np
-from PIL import Image
-from pathlib import Path
-
 from torch.utils.data import Dataset
 from torchvision.transforms import transforms
 from super_image import Trainer, TrainingArguments, MsrnModel, MsrnConfig
 
-os.chdir("/home/SuperResolution_Microfluidics")
+os.chdir(working_dir)
 
+
+# Load the training and eval dataset
 train_dataset = TrainAugmentDatasetH5("data/train/train_file_MSRN.h5", 4, patch_size = 32)                                                     # prepare the train dataset for loading PyTorch DataLoader
-eval_dataset = EvalDatasetH5("data/eval/eval_file_MSRN.h5")      # prepare the eval dataset for the PyTorch DataLoader
+eval_dataset = EvalDatasetH5("data/eval/eval_file_MSRN.h5")     
 
 
+# Set the training arguments
 training_args = TrainingArguments(
-    output_dir='MSRN/results',                 # output directory
+    output_dir='MSRN/results',              
     num_train_epochs= 400)
 
+# Add BAM to the model, set upsampling scale
 config = MsrnConfig(
-    scale=4,                                # train a model to upscale 4x
-    bam=True,                               # apply balanced attention to the network
+    scale=4,                               
+    bam=True,                               
 )
 model = MsrnModel(config)
 
+# Trainer configuration
 trainer = Trainer(
-    model=model,                         # the instantiated model to be trained
-    args=training_args,                  # training arguments, defined above
-    train_dataset=train_dataset,         # training dataset
-    eval_dataset=eval_dataset            # evaluation dataset
+    model=model,                        
+    args=training_args,                 
+    train_dataset=train_dataset,         
+    eval_dataset=eval_dataset          
 )
 
+# Train the model
 trainer.train()
 
 torch.cuda.empty_cache()

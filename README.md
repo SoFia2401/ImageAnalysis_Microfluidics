@@ -1,24 +1,19 @@
 ## Deep Learning for Microfluidic Imaging
 
-## Droplet detection models
+## Demo
 
-To run the droplet detection models run the file /dropletDetection/run.py or open a terminal and run the following: 
+A full demo of the use of the MSRN-BAM, SAM+CHT and DnCNN models is provided [here](Demo.ipynb) 
 
 
-### Circular Hough Transform
+### Segment Anything + Circular Hough Transform (SAM+CHT)
+There exists two implementation of SAM+CHT the SAM_CHT_analysis.py is used for analysis purposes for regular use of SAM+CHT use the SAM_CHT.py
+
+If no gpu remove --gpu
 ```
-python dropletDetection/CHT.py --image-folder 'data/test' --scale 2\
-    --model 'srcnn'\
+python dropletDetection/SAM_CHT.py --image-folder 'data/test' \
     --depthUm '300'\
-    --depthPx '299'
-```
-
-### Segment Anything + Circular Hough Transform
-```
-python dropletDetection/SAM_CHT.py --image-folder 'data/test' --scale 2\
-    --model 'srcnn'\
-    --depthUm '300'\
-    --depthPx '299'
+    --depthPx '299' \
+    --gpu
 ```
 
 ## SRCNN
@@ -115,3 +110,12 @@ python main_test_dncnn.py\
 --show_img False
 
 ```
+
+
+## Useful resources: 
+
+[Segment Anything (SAM)](https://github.com/facebookresearch/segment-anything) 
+
+[Super Resolution models](https://github.com/eugenesiow/super-image-data)
+
+[Denoising models](https://github.com/cszn/KAIR)

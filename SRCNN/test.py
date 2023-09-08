@@ -1,11 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Fri Jun 30 09:10:38 2023
-
-@author: daniel
-"""
-
 import argparse
 import torch
 import torch.backends.cudnn as cudnn
@@ -15,12 +7,13 @@ import os
 from models import SRCNN
 from utils import convert_rgb_to_ycbcr, convert_ycbcr_to_rgb, ssim
 
-
+# Calculate PSNR
 def calc_psnr(img1, img2):
     mse = np.mean((img1 - img2) ** 2)
     psnr = 20 * np.log10(255.0 / np.sqrt(mse))
     return psnr
 
+#   Calculate SSIM
 def calc_ssim(image1, image2):
     ssim_score = ssim(image1, image2)
     return ssim_score
@@ -124,7 +117,6 @@ if __name__ == '__main__':
             num_images += 1
     
         
-    
         # Calculate average SSIM and PSNR
         ssim_avg_pred = ssim_total_pred / num_images
         ssim_avg_bicubic = ssim_total_bicubic / num_images

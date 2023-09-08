@@ -1,6 +1,0 @@
-23-09-02 10:52:46.460 : Model path: model_zoo/denoising_sigma_3.pth
-23-09-02 10:52:46.461 : Params number: 557057
-23-09-02 10:52:46.461 : model_name:denoising_sigma_3, image sigma:3
-23-09-02 10:52:46.461 : testsets/test_sigma6
-23-09-02 10:52:47.509 : Cropped_Qc_0p10mLminQ_d0p05Lmin_freq1000Hz_Img000108.tif - PSNR: 37.78 dB; SSIM: 0.8797.
-23-09-02 10:52:47.531 : Average PSNR/SSIM(RGB) - test_sigma6_denoising_sigma_3 - PSNR: 37.78 dB Std 0.0; SSIM: 0.8797 Std0.0

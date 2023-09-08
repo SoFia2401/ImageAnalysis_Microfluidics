@@ -13,59 +13,10 @@ from utils import utils_logger
 from utils import utils_model
 from utils import utils_image as util
 
-
-'''
-Spyder (Python 3.6)
-PyTorch 1.1.0
-Windows 10 or Linux
-
-Kai Zhang (cskaizhang@gmail.com)
-github: https://github.com/cszn/KAIR
-        https://github.com/cszn/DnCNN
-
-@article{zhang2017beyond,
-  title={Beyond a gaussian denoiser: Residual learning of deep cnn for image denoising},
-  author={Zhang, Kai and Zuo, Wangmeng and Chen, Yunjin and Meng, Deyu and Zhang, Lei},
-  journal={IEEE Transactions on Image Processing},
-  volume={26},
-  number={7},
-  pages={3142--3155},
-  year={2017},
-  publisher={IEEE}
-}
-
-% If you have any question, please feel free to contact with me.
-% Kai Zhang (e-mail: cskaizhang@gmail.com; github: https://github.com/cszn)
-
-by Kai Zhang (12/Dec./2019)
-'''
-
-"""
-# --------------------------------------------
-|--model_zoo          # model_zoo
-   |--dncnn_15        # model_name
-   |--dncnn_25
-   |--dncnn_50
-   |--dncnn_gray_blind
-   |--dncnn_color_blind
-   |--dncnn3
-|--testset            # testsets
-   |--set12           # testset_name
-   |--bsd68
-   |--cbsd68
-|--results            # results
-   |--set12_dncnn_15  # result_name = testset_name + '_' + model_name
-   |--set12_dncnn_25
-   |--bsd68_dncnn_15
-# --------------------------------------------
-"""
-
+from models.network_dncnn import DnCNN as net
+   
 
 def main():
-
-    # ----------------------------------------
-    # Preparation
-    # ----------------------------------------
     parser = argparse.ArgumentParser()
     parser.add_argument('--model_name', type=str, default='dncnn_25', help='dncnn_15, dncnn_25, dncnn_50, dncnn_gray_blind, dncnn_color_blind, dncnn3')
     parser.add_argument('--testset_name', type=str, default='set12', help='test set, bsd68 | set12')
@@ -80,27 +31,27 @@ def main():
     parser.add_argument('--sf', type=int, default=1, help='unused for denoising')
     args = parser.parse_args()
 
-
-    n_channels = 1        # fixed for grayscale image
+    # grayscale image
+    n_channels = 1        
     if args.model_name in ['dncnn_gray_blind', 'dncnn_color_blind', 'dncnn3']:
-        nb = 20               # fixed
+        nb = 20               
     else:
-        nb = 17               # fixed
+        nb = 17             
 
-    result_name = args.testset_name + '_' + args.model_name     # fixed
-    border = args.sf if args.task_current == 'sr' else 0        # shave boader to calculate PSNR and SSIM
-    model_path = os.path.join(args.model_pool, args.model_name+'.pth')
+    result_name = args.testset_name + '_' + args.model_name    
+    border = args.sf if args.task_current == 'sr' else 0        
 
-    # ----------------------------------------
-    # L_path, E_path, H_path
-    # ----------------------------------------
+    # get current working directory
+    cwd = os.getcwd()
+    model_path = os.path.join(cwd  + "/" + args.model_pool, args.model_name+'.pth')
 
-    L_path = os.path.join(args.testsets, args.testset_name) # L_path, for Low-quality images
-    H_path = L_path                               # H_path, for High-quality images
-    E_path = os.path.join(args.results, result_name)   # E_path, for Estimated images
+   
+    L_path = os.path.join(args.testsets, args.testset_name) 
+    H_path = L_path                              
+    E_path = os.path.join(args.results, result_name)   
     util.mkdir(E_path)
 
-    os.mkdir(E_path + '/noisy')
+    util.mkdir(E_path + '/noisy')
 
     if H_path == L_path:
         args.need_degradation = True
@@ -111,13 +62,8 @@ def main():
     need_H = True if H_path is not None else False
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-    # ----------------------------------------
-    # load model
-    # ----------------------------------------
 
-    from models.network_dncnn import DnCNN as net
-    #model = net(in_nc=n_channels, out_nc=n_channels, nc=64, nb=nb, act_mode='R')
-    model = net(in_nc=n_channels, out_nc=n_channels, nc=64, nb=nb, act_mode='BR')  # use this if BN is not merged by utils_bnorm.merge_bn(model)
+    model = net(in_nc=n_channels, out_nc=n_channels, nc=64, nb=nb, act_mode='BR') 
     model.load_state_dict(torch.load(model_path), strict=True)
     model.eval()
     for k, v in model.named_parameters():
@@ -138,17 +84,14 @@ def main():
 
     for idx, img in enumerate(L_paths):
 
-        # ------------------------------------
-        # (1) img_L
-        # ------------------------------------
 
         img_name, ext = os.path.splitext(os.path.basename(img))
-        # logger.info('{:->4d}--> {:>10s}'.format(idx+1, img_name+ext))
+     
         img_L = util.imread_uint(img, n_channels=n_channels)
         img_L = util.uint2single(img_L)
 
-        if args.need_degradation:  # degradation process
-            np.random.seed(seed=0)  # for reproducibility
+        if args.need_degradation:
+            np.random.seed(seed=0)  
             img_L += np.random.normal(0, args.noise_level_img/255., img_L.shape)
 
         util.imshow(util.single2uint(img_L), title='Noisy image with noise level {}'.format(args.noise_level_img)) if args.show_img else None
@@ -157,10 +100,7 @@ def main():
         img_L_device = img_L.to(device)
         img_L = util.tensor2uint(img_L_device)
 
-        # ------------------------------------
-        # (2) img_E
-        # ------------------------------------
-
+     
         if not args.x8:
             img_E = model(img_L_device)
         else:
@@ -170,17 +110,11 @@ def main():
 
         if need_H:
 
-            # --------------------------------
-            # (3) img_H
-            # --------------------------------
-
+            
             img_H = util.imread_uint(H_paths[idx], n_channels=n_channels)
             img_H = img_H.squeeze()
 
-            # --------------------------------
-            # PSNR and SSIM
-            # --------------------------------
-
+           
             psnr = util.calculate_psnr(img_E, img_H, border=border)
             ssim = util.calculate_ssim(img_E, img_H, border=border)
             test_results['psnr'].append(psnr)
@@ -188,15 +122,13 @@ def main():
             logger.info('{:s} - PSNR: {:.2f} dB; SSIM: {:.4f}.'.format(img_name+ext, psnr, ssim))
             util.imshow(np.concatenate([img_E, img_H], axis=1), title='Recovered / Ground-truth') if args.show_img else None
 
-        # ------------------------------------
-        # save results
-        # ------------------------------------
-        
+      
         
 
         ext = '.tif'
-        util.imsave(img_E, os.path.join(E_path, img_name+ext))
-        util.imsave(img_L, os.path.join(E_path + '/noisy/', img_name +'_LR' + ext))
+        util.imsave(img_E, os.path.join(E_path, img_name + "_DnCNN" +ext))
+        util.imsave(img_L, os.path.join(E_path, img_name + '_noisy' + ext))
+        util.imsave(img_H, os.path.join(E_path, img_name+ext))
 
     if need_H:
         ave_psnr = sum(test_results['psnr']) / len(test_results['psnr'])

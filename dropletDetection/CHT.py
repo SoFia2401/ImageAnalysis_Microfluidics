@@ -1,18 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Sat Jul 15 11:16:18 2023
-
-@author: sofiahernandezgelado
-"""
-
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Jul  6 11:43:10 2023
-@author: daniel
-"""
-
 import os
 import csv
 import numpy as np
@@ -122,6 +107,7 @@ def draw_cross(image, y, x, length, color, width):
     image[y - length: y + length, x - half_width: x + half_width] = color
 
 
+# Calculate precision, recall, and F1 score
 def calculate_metrics(true_positives, detected, total_gt):
     precision = true_positives / detected if detected > 0 else 0
     recall = true_positives / total_gt if total_gt > 0 else 0
@@ -129,10 +115,12 @@ def calculate_metrics(true_positives, detected, total_gt):
     return precision, recall, f1_score
 
 
+# Calculate the distance between two points
 def distance(center1, center2):
     return np.sqrt((center1[0] - center2[0])**2 + (center1[1] - center2[1])**2)
 
 
+# Process image for multiprocessing
 def process_image(image_folder, tolerance, depthUm, depthPx, bicubic_name, srcnn_name, gt_image_name):
     factor = args.depthUm/args.depthPx
     gt_image_path = os.path.join(image_folder, gt_image_name)
@@ -148,9 +136,6 @@ def process_image(image_folder, tolerance, depthUm, depthPx, bicubic_name, srcnn
     edges_srcnn = canny(srcnn_image, sigma=1, low_threshold=10, high_threshold=13)
     
     
-    plt.imshow(edges_bicubic, cmap = 'gray')
-    plt.savefig("/home/sofiahernandezgelado/Downloads/edges.tif")
-
     # Detect circles in ground truth
           # Detect circles in ground truth
     hough_radii = np.arange(50, 150, 2)
@@ -189,7 +174,6 @@ def process_image(image_folder, tolerance, depthUm, depthPx, bicubic_name, srcnn
     
     
     # Find closest circles based on center points
-
     radii_gt_zero_filled, radii_bicubic_zero_filled = find_closest_circles_replace_for_0(cx_gt, cy_gt, cx_bicubic, cy_bicubic, radii_gt, radii_bicubic, factor, tolerance)
     radii_gt_zero_filled, radii_model_zero_filled = find_closest_circles_replace_for_0(cx_gt, cy_gt, cx_srcnn, cy_srcnn, radii_gt, radii_srcnn, factor, tolerance)
     
@@ -359,6 +343,7 @@ def evaluate_circle_detection(image_folder, scale, depthUm, depthPx, model):
     
 
 
+    # For multiprocessing 
     num_processes = multiprocessing.cpu_count()
     pool = multiprocessing.Pool(processes=num_processes)
 
@@ -368,7 +353,7 @@ def evaluate_circle_detection(image_folder, scale, depthUm, depthPx, model):
     for result in results:
         gt_image_name, absolute_diff_srcnn, absolute_diff_bicubic, relative_diff_srcnn, relative_diff_bicubic, differences_bicubic_zero, differences_model_zero, bicubic_detection, model_detection, dsc_bicubic, dsc_srcnn, intersection_over_union_bicubic, intersection_over_union_srcnn, diameter_hr = result
 
-
+        # append results to lists for overall metrics
         dsc_bicubic_list.append(dsc_bicubic)
         dsc_srcnn_list.append(dsc_srcnn)
         iou_bicubic_list.append(intersection_over_union_bicubic)
@@ -383,7 +368,7 @@ def evaluate_circle_detection(image_folder, scale, depthUm, depthPx, model):
         model_detection_list.append(model_detection)
         
         
-        
+        # Write the results to csv file for individual images
         csvwriter_images.writerow([
             gt_image_name,
             dsc_bicubic, dsc_srcnn,
@@ -395,11 +380,7 @@ def evaluate_circle_detection(image_folder, scale, depthUm, depthPx, model):
         ])
 
 
-    # Calculate overall metrics for the entire test
-    # Print and write the overall metrics
-    
-    
-    # Calculate overall measures and standard deviations
+    # Calculate overall metrics for the entire test dataset
     overall_dice_bicubic = np.mean(dsc_bicubic_list)
     overall_dice_model = np.mean(dsc_srcnn_list)
     overall_iou_bicubic = np.mean(iou_bicubic_list)
@@ -422,7 +403,7 @@ def evaluate_circle_detection(image_folder, scale, depthUm, depthPx, model):
     std_bicubic_relative_error = np.std(bicubic_difference_relative_list)
     
     
-  
+    #write overall metrics to csv
     csvwriter_overall.writerow([
         overall_dice_bicubic, std_dice_bicubic,
         overall_dice_model, std_dice_model,

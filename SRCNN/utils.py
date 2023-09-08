@@ -88,6 +88,8 @@ def calc_psnr(img1, img2):
     psnr = 10. * torch.log10(1. / mse)
     return psnr.cpu().detach().numpy()
 
+
+# Keep track of average loss, PSNR, and SSIM during traininf
 class AverageMeter(object):
     def __init__(self):
         self.reset()

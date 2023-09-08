@@ -15,6 +15,7 @@ import os
 import matplotlib.pyplot as plt
 
 
+# Prepare the training dataset into h5py file
 def train(args):
     h5_file = h5py.File(args.output_path, 'w')
 
@@ -26,8 +27,9 @@ def train(args):
         hr_width = (hr.width // args.scale) * args.scale
         hr_height = (hr.height // args.scale) * args.scale
         hr = hr.resize((hr_width, hr_height), resample=pil_image.BICUBIC)
+
+        # downsampling
         lr = hr.resize((hr_width // args.scale, hr_height // args.scale), resample=pil_image.BICUBIC)
-        #lr = lr.resize((lr.width * args.scale, lr.height * args.scale), resample=pil_image.BICUBIC)
 
         hr = np.array(hr).astype(np.float32)
         lr = np.array(lr).astype(np.float32)
@@ -38,9 +40,9 @@ def train(args):
         
         
     h5_file.close()
-    print("Finished")
+
     
-    
+# Prepare the validation dataset into h5py file   
 def eval(args):
     h5_file = h5py.File(args.output_path, 'w')
 
@@ -49,13 +51,14 @@ def eval(args):
 
     for i, image_path in enumerate(sorted(glob.glob('{}/*.tif'.format(args.images_dir)))):
 
-        #print("Converting image " + image_path)
         hr = pil_image.open(image_path).convert('RGB')
         hr_width = (hr.width // args.scale) * args.scale
         hr_height = (hr.height // args.scale) * args.scale
         hr = hr.resize((hr_width, hr_height), resample=pil_image.BICUBIC)
+
+        # downsampling
         lr = hr.resize((hr_width // args.scale, hr_height // args.scale), resample=pil_image.BICUBIC)
-        #lr = lr.resize((lr.width * args.scale, lr.height * args.scale), resample=pil_image.BICUBIC)
+
        
         hr = np.array(hr).astype(np.float32)
        
@@ -66,7 +69,6 @@ def eval(args):
         hr_group.create_dataset(str(i), data=hr)
 
     h5_file.close()
-    print("Finished")
 
 
 

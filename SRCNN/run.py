@@ -1,11 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Sat Jun 10 20:17:13 2023
-
-@author: sofiahernandezgelado
-"""
-
 # Change directory to repository
 import os
 os.chdir("/home/SuperResolution_Microfluidics")

@@ -1,11 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Jul  5 12:08:49 2023
-
-@author: daniel
-"""
-
 import argparse
 import glob
 import h5py
@@ -14,7 +6,7 @@ import PIL.Image as pil_image
 import os
 import matplotlib.pyplot as plt
 
-
+# Train using h5py files
 def train(args):
     h5_file = h5py.File(args.output_path, 'w')
 
@@ -25,9 +17,12 @@ def train(args):
         hr = pil_image.open(image_path).convert('L')
         hr_width = (hr.width // args.scale) * args.scale
         hr_height = (hr.height // args.scale) * args.scale
+
+        # downsampling
         hr = hr.resize((hr_width, hr_height), resample=pil_image.BICUBIC)
         lr = hr.resize((hr_width // args.scale, hr_height // args.scale), resample=pil_image.BICUBIC)
 
+        # upsampling using bicubic
         lr = lr.resize((lr.width * args.scale, lr.height * args.scale), resample=pil_image.BICUBIC)
 
         hr = np.array(hr).astype(np.float32)
@@ -39,9 +34,8 @@ def train(args):
         
         
     h5_file.close()
-    print("Finished")
     
-    
+# Evaluate using h5py files
 def eval(args):
     h5_file = h5py.File(args.output_path, 'w')
 
@@ -53,8 +47,12 @@ def eval(args):
         hr = pil_image.open(image_path).convert('L')
         hr_width = (hr.width // args.scale) * args.scale
         hr_height = (hr.height // args.scale) * args.scale
+
+        # downsampling
         hr = hr.resize((hr_width, hr_height), resample=pil_image.BICUBIC)
         lr = hr.resize((hr_width // args.scale, hr_height // args.scale), resample=pil_image.BICUBIC)
+
+        # upsampling using bicubic
         lr = lr.resize((lr.width * args.scale, lr.height * args.scale), resample=pil_image.BICUBIC)
        
         hr = np.array(hr).astype(np.float32)

@@ -1,3 +1,5 @@
+## Employ mlflow to log the training process disable if mlflow is not installed
+
 import mlflow
 import argparse
 import os
@@ -29,26 +31,6 @@ import matplotlib.font_manager as font_manager
 
 
 
-class EarlyStopper:
-    def __init__(self, patience=1, min_delta=0):
-        self.patience = patience
-        self.min_delta = min_delta
-        self.counter = 0
-        self.min_validation_loss = np.inf
-
-    def early_stop(self, validation_loss):
-        if validation_loss < self.min_validation_loss:
-            self.min_validation_loss = validation_loss
-            self.counter = 0
-        elif validation_loss > (self.min_validation_loss + self.min_delta):
-            self.counter += 1
-            if self.counter >= self.patience:
-                return True
-        return False
-
-
-
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--train-file', type=str, required=True)
@@ -62,10 +44,7 @@ if __name__ == '__main__':
     parser.add_argument('--seed', type=int, default=123)
     args = parser.parse_args()
     
-    
-    early_stopper = EarlyStopper(patience=10, min_delta=1e-7)
-    
-    
+
 
     args.outputs_dir = os.path.join(args.outputs_dir, 'x{}'.format(args.scale))
 
@@ -101,7 +80,8 @@ if __name__ == '__main__':
     best_weights = copy.deepcopy(model.state_dict())
     best_epoch = 0
     best_psnr = 0.0
-    
+
+    # Keep track of loss ssim and psnr during training
     train_loss = AverageMeter()
     train_psnr = AverageMeter()
     train_ssim = AverageMeter()
@@ -112,7 +92,6 @@ if __name__ == '__main__':
     mlflow.set_experiment("Experiment 3")
     mlflow.autolog()
     
-    patience = 10
     psnr_values = []
 
     with mlflow.start_run(nested=True, run_name = ("x" + str(args.scale) + "_srcnn_batchSize_" + str(args.batch_size) + "_" + args.outputs_dir)):
@@ -250,9 +229,6 @@ if __name__ == '__main__':
                 best_epoch = epoch
                 best_psnr = val_psnr.avg
                 best_weights = copy.deepcopy(model.state_dict())
-
-            if early_stopper.early_stop(val_loss.avg):             
-                break
 
             print('best epoch: {}, psnr: {:.2f}'.format(best_epoch, best_psnr))
             
