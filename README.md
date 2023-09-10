@@ -118,7 +118,7 @@ python main_test_dncnn.py\
 ```
 
 
-## Useful resources: 
+## This repository builds upon and adapts code from the following repositories:
 
 [Segment Anything (SAM)](https://github.com/facebookresearch/segment-anything) 
 
