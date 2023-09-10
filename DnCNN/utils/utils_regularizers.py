@@ -2,13 +2,6 @@ import torch
 import torch.nn as nn
 
 
-'''
-# --------------------------------------------
-# Kai Zhang (github: https://github.com/cszn)
-# 03/Mar/2019
-# --------------------------------------------
-'''
-
 
 # --------------------------------------------
 # SVD Orthogonal Regularization
@@ -94,11 +87,3 @@ def regularizer_clip(m):
             b[b < c_min] += eps
             m.bias.data = b
 
-#    elif classname.find('BatchNorm2d') != -1:
-#
-#       rv = m.running_var.data.clone()
-#       rm = m.running_mean.data.clone()
-#
-#        if m.affine:
-#            m.weight.data
-#            m.bias.data
