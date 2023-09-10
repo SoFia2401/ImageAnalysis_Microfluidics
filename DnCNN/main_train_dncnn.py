@@ -8,8 +8,6 @@ from collections import OrderedDict
 import logging
 import torch
 from torch.utils.data import DataLoader
-
-
 from utils import utils_logger
 from utils import utils_image as util
 from utils import utils_option as option
@@ -22,31 +20,6 @@ import mlflow.pytorch
 
 from utils_metrics import AverageMeter, calc_psnr, calc_ssim
 
-'''
-# --------------------------------------------
-# training code for DnCNN
-# --------------------------------------------
-# Kai Zhang (cskaizhang@gmail.com)
-# github: https://github.com/cszn/KAIR
-#         https://github.com/cszn/DnCNN
-#
-# Reference:
-@article{zhang2017beyond,
-  title={Beyond a gaussian denoiser: Residual learning of deep cnn for image denoising},
-  author={Zhang, Kai and Zuo, Wangmeng and Chen, Yunjin and Meng, Deyu and Zhang, Lei},
-  journal={IEEE Transactions on Image Processing},
-  volume={26},
-  number={7},
-  pages={3142--3155},
-  year={2017},
-  publisher={IEEE}
-}
-# --------------------------------------------
-# https://github.com/xinntao/BasicSR
-# --------------------------------------------
-'''
-
-
 def main(json_path='options/train_dncnn.json'):
     
     
@@ -54,51 +27,27 @@ def main(json_path='options/train_dncnn.json'):
     mlflow.autolog()
     
     with mlflow.start_run(nested=True):
-    
-        '''
-        # ----------------------------------------
-        # Step--1 (prepare opt)
-        # ----------------------------------------
-        '''
-    
+  
         parser = argparse.ArgumentParser()
         parser.add_argument('-opt', type=str, default=json_path, help='Path to option JSON file.')
     
         opt = option.parse(parser.parse_args().opt, is_train=True)
         util.mkdirs((path for key, path in opt['path'].items() if 'pretrained' not in key))
     
-        # ----------------------------------------
-        # update opt
-        # ----------------------------------------
-        # -->-->-->-->-->-->-->-->-->-->-->-->-->-
         init_iter, init_path_G = option.find_last_checkpoint(opt['path']['models'], net_type='G')
         opt['path']['pretrained_netG'] = init_path_G
         current_step = init_iter
     
         border = 0
-        # --<--<--<--<--<--<--<--<--<--<--<--<--<-
-    
-        # ----------------------------------------
-        # save opt to  a '../option.json' file
-        # ----------------------------------------
         option.save(opt)
     
-        # ----------------------------------------
-        # return None for missing key
-        # ----------------------------------------
         opt = option.dict_to_nonedict(opt)
-    
-        # ----------------------------------------
-        # configure logger
-        # ----------------------------------------
+      
         logger_name = 'train'
         utils_logger.logger_info(logger_name, os.path.join(opt['path']['log'], logger_name+'.log'))
         logger = logging.getLogger(logger_name)
         logger.info(option.dict2str(opt))
     
-        # ----------------------------------------
-        # seed
-        # ----------------------------------------
         seed = opt['train']['manual_seed']
         if seed is None:
             seed = random.randint(1, 10000)
@@ -108,16 +57,6 @@ def main(json_path='options/train_dncnn.json'):
         torch.manual_seed(seed)
         torch.cuda.manual_seed_all(seed)
     
-        '''
-        # ----------------------------------------
-        # Step--2 (creat dataloader)
-        # ----------------------------------------
-        '''
-    
-        # ----------------------------------------
-        # 1) create_dataset
-        # 2) creat_dataloader for train and test
-        # ----------------------------------------
         dataset_type = opt['datasets']['train']['dataset_type']
         for phase, dataset_opt in opt['datasets'].items():
             if phase == 'train':
@@ -138,11 +77,6 @@ def main(json_path='options/train_dncnn.json'):
             else:
                 raise NotImplementedError("Phase [%s] is not recognized." % phase)
     
-        '''
-        # ----------------------------------------
-        # Step--3 (initialize model)
-        # ----------------------------------------
-        '''
     
         model = define_Model(opt)
     
@@ -154,12 +88,6 @@ def main(json_path='options/train_dncnn.json'):
         model.init_train()
         logger.info(model.info_params())
     
-        '''
-        # ----------------------------------------
-        # Step--4 (main training)
-        # ----------------------------------------
-        '''
-        
         train_loss = AverageMeter()
         train_psnr = AverageMeter()
         train_ssim = AverageMeter()
@@ -266,29 +194,12 @@ def main(json_path='options/train_dncnn.json'):
                         
                         val_loss.update(logs['G_loss'], len(train_data['H']))
     
-                        # -----------------------
-                        # save estimated image E
-                        # -----------------------
-                        #save_img_path = os.path.join(img_dir, '{:s}_{:d}.png'.format(img_name, current_step))
-                        #save_img_path_L = os.path.join(img_dir, '{:s}_{:d}_LR.png'.format(img_name, current_step))
-                        #util.imsave(E_img, save_img_path)
-                        #util.imsave(L_img, save_img_path_L)
-    
-                        # -----------------------
-                        # calculate PSNR
-                        # -----------------------
                         current_psnr = util.calculate_psnr(E_img, H_img, border=border)
-    
-                        #logger.info('{:->4d}--> {:>10s} | {:<4.2f}dB'.format(idx, image_name_ext, current_psnr))
     
                         avg_psnr += current_psnr
     
                     avg_psnr = avg_psnr / idx
-    
-                    # testing log
-                    #logger.info('<epoch:{:3d}, iter:{:8,d}, Average PSNR : {:<.2f}dB\n'.format(epoch, current_step, avg_psnr))
-
-                    
+  
                     val_loss.update_epoch(val_loss.avg)
                     val_psnr.update_epoch(val_psnr.avg)
                     val_ssim.update_epoch(val_ssim.avg)
@@ -299,10 +210,6 @@ def main(json_path='options/train_dncnn.json'):
                     mlflow.log_metric("val ssim", val_ssim.per_epoch[epoch])   
                     
                     
-                    
-                # -------------------------------
-                # 5) save model
-                # -------------------------------
                 if current_step % opt['train']['checkpoint_save'] == 0:
                     logger.info('Saving the model.')
                     model.save(current_step)
