@@ -1,20 +1,3 @@
-# -*- coding: utf-8 -*-
-
-# online calculation: https://fomoro.com/research/article/receptive-field-calculator#
-
-# [filter size, stride, padding]
-#Assume the two dimensions are the same
-#Each kernel requires the following parameters:
-# - k_i: kernel size
-# - s_i: stride
-# - p_i: padding (if padding is uneven, right padding will higher than left padding; "SAME" option in tensorflow)
-# 
-#Each layer i requires the following parameters to be fully represented: 
-# - n_i: number of feature (data layer has n_1 = imagesize )
-# - j_i: distance (projected to image pixel distance) between center of two adjacent features
-# - r_i: receptive field of a feature in layer i
-# - start_i: position of the first feature's receptive field in layer i (idx start from 0, negative means the center fall into padding)
-
 import math
 
 def outFromIn(conv, layerIn):
