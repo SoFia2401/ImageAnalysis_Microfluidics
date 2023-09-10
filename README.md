@@ -122,6 +122,6 @@ python main_test_dncnn.py\
 
 [Segment Anything (SAM)](https://github.com/facebookresearch/segment-anything) 
 
-[Super Resolution models](https://github.com/eugenesiow/super-image-data)
+[Super Resolution models](https://github.com/eugenesiow/super-image)
 
 [Denoising models](https://github.com/cszn/KAIR)
