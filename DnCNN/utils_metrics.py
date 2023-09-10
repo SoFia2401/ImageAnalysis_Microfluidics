@@ -9,8 +9,6 @@ from torch.utils.data.dataloader import DataLoader
 from skimage.metrics import structural_similarity as ssim
 
 
-
-
 def get_scale_from_dataset(dataset: Dataset):
     lr, hr = dataset[0]
     dim1 = round(hr.shape[1] / lr.shape[1])
@@ -37,8 +35,6 @@ def calc_psnr(preds, label):
 
     
     return psnr
-
-
 
 
 class AverageMeter(object):
@@ -105,21 +101,11 @@ def compute_metrics(eval_prediction, scale):
     preds = eval_prediction.predictions
     labels = eval_prediction.labels
 
-    # from piq import ssim, psnr
-    # print(psnr(denormalize(preds), denormalize(labels), data_range=255.),
-    #       ssim(denormalize(preds), denormalize(labels), data_range=255.))
-
-    # original = preds[0][0][0][0]
-
     preds = convert_rgb_to_y(denormalize(preds.squeeze(0)), dim_order='chw')
     labels = convert_rgb_to_y(denormalize(labels.squeeze(0)), dim_order='chw')
 
-    # print(preds[0][0], original * 255.)
-
     preds = preds[scale:-scale, scale:-scale]
     labels = labels[scale:-scale, scale:-scale]
-
-    # print(calc_psnr(preds, labels), calc_ssim(preds, labels))
 
     return {
         'psnr': calc_psnr(preds, labels),
@@ -129,9 +115,6 @@ def compute_metrics(eval_prediction, scale):
 
 def calc_ssim(label, preds):
     return ssim(label, preds)
-
-#, data_range=preds.max() - preds.min(), channel_axis=1
-
 
 
 def calculate_mean_std(dataset):
