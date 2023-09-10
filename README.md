@@ -13,7 +13,7 @@ Fork the repository and download the SAM model checkpoint from [here](https://dl
 A full demo of the use of the MSRN-BAM, SAM+CHT and DnCNN models is provided [here](Demo.ipynb) 
 
 
-### Segment Anything + Circular Hough Transform (SAM+CHT)
+## Segment Anything + Circular Hough Transform (SAM+CHT)
 There exists two implementation of SAM+CHT the SAM_CHT_analysis.py is used for analysis purposes for regular use of SAM+CHT use the SAM_CHT.py
 
 If no gpu remove --gpu
