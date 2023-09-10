@@ -1,10 +1,3 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Thu Jul  6 12:44:29 2023
-
-@author: daniel
-"""
 import os
 os.chdir("/home/sofiahernandezgelado/Documents/SuperResolution_Microfluidics")
 
